@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app-deployment
+spec:
+  replicas: 2 # Number of pod replicas
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+      - name: my-app-container
+        image: gcr.io/docai-437609/uniclouddocaimp/deployer # Use your image path from the Artifact Registry
+        ports:
+        - containerPort: 80 # Port exposed by the container
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-app-service
+spec:
+  selector:
+    app: my-app
+  ports:
+    - protocol: TCP
+      port: 80 # Port on the service
+      targetPort: 80 # Port on the container
+  type: LoadBalancer # This will create an external load balancer
